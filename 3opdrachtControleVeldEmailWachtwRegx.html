@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JavaScript PE opdracht</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <main class="container">
+        <h1>Registreer</h1>
+        <p>Meld je aan bij Anoroc Services, wij beschermen jouw software tegen malware!</p>
+        <div class="row">
+            <div class="col-md-8">
+                <form>
+                    <!-- Eerste rij -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="voornaam" class="form-label">Voornaam</label>
+                            <input type="text" class="form-control" id="voornaam">
+                        </div>
+                        <div class="col">
+                            <label for="naam" class="form-label">Naam</label>
+                            <input type="text" class="form-control" id="naam">
+                        </div>
+                    </div>
+
+                    <!-- Tweede rij -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="gebruikersnaam" class="form-label">Gebruikersnaam</label>
+                            <input type="text" class="form-control" id="gebruikersnaam">
+                        </div>
+                        <div class="col">
+                            <label for="email" class="form-label">E-mailadres</label>
+                            <input type="email" class="form-control" id="email">
+                        </div>
+                    </div>
+
+                    <!-- Derde rij -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="wachtwoord" class="form-label">Wachtwoord</label>
+                            <input type="password" class="form-control" id="wachtwoord">
+                        </div>
+                        <div class="col">
+                            <label for="herhaalWachtwoord" class="form-label">Herhaal wachtwoord</label>
+                            <input type="password" class="form-control" id="herhaalWachtwoord">
+                        </div>
+                    </div>
+
+                    <!-- Vierde rij -->
+                    <div class="mb-3">
+                        <label for="adres" class="form-label">Adres</label>
+                        <input type="text" class="form-control" id="adres">
+                    </div>
+
+                    <!-- Vijfde rij -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="land" class="form-label">Land</label>
+                            <input type="text" class="form-control" id="land">
+                        </div>
+                        <div class="col">
+                            <label for="provincie" class="form-label">Provincie</label>
+                            <input type="text" class="form-control" id="provincie">
+                        </div>
+                        <div class="col">
+                            <label for="postcode" class="form-label">Postcode</label>
+                            <input type="text" class="form-control" id="postcode">
+                        </div>
+                    </div>
+
+                    <!-- Zesde rij -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <h4>Hou me op de hoogte</h4>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="nieuwsbrief">
+                                <label class="form-check-label" for="nieuwsbrief">
+                                    Inschrijven voor onze nieuwsbrief
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="akkoordVoorwaarden">
+                                <label class="form-check-label" for="akkoordVoorwaarden">
+                                    Ik ga akkoord met de algemene voorwaarden
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h4>Betaling</h4>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="betaling" id="bankingApp">
+                                <label class="form-check-label" for="bankingApp">
+                                    Banking app
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="betaling" id="overschrijving">
+                                <label class="form-check-label" for="overschrijving">
+                                    Overschrijving
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="betaling" id="visaCard">
+                                <label class="form-check-label" for="visaCard">
+                                    Visa card
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="betaling" id="paypal">
+                                <label class="form-check-label" for="paypal">
+                                    PayPal
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zevende rij -->
+                    <button type="button" id="btnCheck" class="btn btn-primary mb-2">Wave your magic wand</button>
+
+                </form>
+            </div>
+            <div class="col-md">
+                <div id="success" class="alert alert-success" role="alert">
+                    A simple success alert—check it out!
+                </div>
+                <div id="errors" class="alert alert-danger" role="alert">
+                    <ul class="mb-0"></ul>
+                </div>
+                <div id="info" class="alert alert-info" role="alert">
+                    A simple info alert—check it out!
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        // Selecteer de knop en initialiseer de foutenarray
+        const checkForm = document.querySelector('#btnCheck');
+        let errorsArray = [];
+    
+        // Verberg alle meldingen bij het laden van de pagina
+        hideAlerts();
+    
+
+    // Voeg een click event listener toe aan de knop
+    checkForm.addEventListener('click', validateForm);
+
+    // Functie om het formulier te valideren
+    function validateForm() {
+        // Reset de foutenarray
+        errorsArray = [];
+
+        // Valideer de vereiste velden
+        checkEmptyField(document.getElementById('voornaam'), 'Voornaam is verplicht');
+        checkEmptyField(document.getElementById('naam'), 'Naam is verplicht');
+        checkEmptyField(document.getElementById('gebruikersnaam'), 'Gebruikersnaam is verplicht');
+        checkEmptyField(document.getElementById('adres'), 'Adres is verplicht');
+        checkEmptyField(document.getElementById('land'), 'Land is verplicht');
+        checkEmptyField(document.getElementById('provincie'), 'Provincie is verplicht');
+
+        // Controleer e-mailadres
+        validateEmail(document.getElementById('email'));
+
+        // Controleer wachtwoorden
+        checkPasswords();
+
+        // Controleer of er fouten zijn
+        if (errorsArray.length > 0) {
+            // Toon fouten in de meldingslijst
+            let errorList = document.querySelector('#errors ul');
+            errorList.innerHTML = "";
+            errorsArray.forEach((error) => {
+                errorList.innerHTML += `<li>${error}</li>`;
+            });
+
+            // Toon het foutenblok
+            document.querySelector('#errors').classList.remove('d-none');
+        } else {
+            // Toon succes- en informatiemeldingen
+            document.querySelector('#success').classList.remove('d-none');
+            document.querySelector('#info').classList.remove('d-none');
+        }
+    }
+
+    // Functie om een leeg veld te controleren en een melding toe te voegen aan de array errors
+    function checkEmptyField(field, message) {
+        if (field.value.trim() === "") {
+            errorsArray.push(message);
+        }
+    }
+
+    // Functie om e-mailadres te controleren
+    function validateEmail(emailField) {
+        const email = emailField.value.trim();
+        const emailRegex = /^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*(\.[a-zA-Z]{2,})+$/;
+
+        if (!emailRegex.test(email)) {
+            errorsArray.push("E-mailadres is niet correct.");
+        }
+    }
+
+    // Functie om wachtwoorden te controleren
+    function checkPasswords() {
+        const passwordField = document.getElementById('wachtwoord');
+        const confirmPasswordField = document.getElementById('herhaalWachtwoord');
+
+        // Controleer of beide wachtwoorden zijn ingevuld
+        checkEmptyField(passwordField, 'Wachtwoord is verplicht');
+        checkEmptyField(confirmPasswordField, 'Herhaal wachtwoord is verplicht');
+
+        // Controleer of wachtwoorden gelijk zijn en voldoen aan lengte-eis
+        const password = passwordField.value.trim();
+        const confirmPassword = confirmPasswordField.value.trim();
+
+        if (password.length < 8) {
+            errorsArray.push('Wachtwoord moet minstens 8 karakters lang zijn.');
+        }
+
+        if (password !== confirmPassword) {
+            errorsArray.push('Wachtwoorden komen niet overeen.');
+        }
+    }
+    
+        // Functie om alle meldingen te verbergen
+        function hideAlerts() {
+            document.querySelector('#success').classList.add('d-none');
+            document.querySelector('#errors').classList.add('d-none');
+            document.querySelector('#info').classList.add('d-none');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
