@@ -146,85 +146,130 @@
         // Verberg alle meldingen bij het laden van de pagina
         hideAlerts();
     
-
-    // Voeg een click event listener toe aan de knop
-    checkForm.addEventListener('click', validateForm);
-
-    // Functie om het formulier te valideren
-    function validateForm() {
-        // Reset de foutenarray
-        errorsArray = [];
-
-        // Valideer de vereiste velden
-        checkEmptyField(document.getElementById('voornaam'), 'Voornaam is verplicht');
-        checkEmptyField(document.getElementById('naam'), 'Naam is verplicht');
-        checkEmptyField(document.getElementById('gebruikersnaam'), 'Gebruikersnaam is verplicht');
-        checkEmptyField(document.getElementById('adres'), 'Adres is verplicht');
-        checkEmptyField(document.getElementById('land'), 'Land is verplicht');
-        checkEmptyField(document.getElementById('provincie'), 'Provincie is verplicht');
-
-        // Controleer e-mailadres
-        validateEmail(document.getElementById('email'));
-
-        // Controleer wachtwoorden
-        checkPasswords();
-
-        // Controleer of er fouten zijn
-        if (errorsArray.length > 0) {
-            // Toon fouten in de meldingslijst
-            let errorList = document.querySelector('#errors ul');
-            errorList.innerHTML = "";
-            errorsArray.forEach((error) => {
-                errorList.innerHTML += `<li>${error}</li>`;
-            });
-
-            // Toon het foutenblok
-            document.querySelector('#errors').classList.remove('d-none');
-        } else {
-            // Toon succes- en informatiemeldingen
-            document.querySelector('#success').classList.remove('d-none');
-            document.querySelector('#info').classList.remove('d-none');
+        // Voeg een click event listener toe aan de knop
+        checkForm.addEventListener('click', validateForm);
+    
+        // Functie om het formulier te valideren
+        function validateForm() {
+            // Reset de foutenarray
+            errorsArray = [];
+    
+            // Valideer de vereiste velden
+            checkEmptyField(document.getElementById('voornaam'), 'Voornaam is verplicht');
+            checkEmptyField(document.getElementById('naam'), 'Naam is verplicht');
+            checkEmptyField(document.getElementById('gebruikersnaam'), 'Gebruikersnaam is verplicht');
+            checkEmptyField(document.getElementById('adres'), 'Adres is verplicht');
+            checkEmptyField(document.getElementById('land'), 'Land is verplicht');
+            checkEmptyField(document.getElementById('provincie'), 'Provincie is verplicht');
+    
+            // Controleer e-mailadres
+            validateEmail(document.getElementById('email'));
+    
+            // Controleer wachtwoorden
+            checkPasswords();
+    
+            // Controleer betalingswijze
+            validatePayment(document.querySelector('input[name="betaling"]:checked'));
+    
+            // Controleer postcode
+            checkPC(document.getElementById('postcode'));
+    
+            // Controleer algemene voorwaarden
+            if (!document.getElementById('akkoordVoorwaarden').checked) {
+                errorsArray.push('Je moet akkoord gaan met de algemene voorwaarden.');
+            }
+    
+            // Controleer of er fouten zijn
+            if (errorsArray.length > 0) {
+                // Toon fouten in de meldingslijst
+                let errorList = document.querySelector('#errors ul');
+                errorList.innerHTML = "";
+                errorsArray.forEach((error) => {
+                    errorList.innerHTML += `<li>${error}</li>`;
+                });
+    
+                // Toon het foutenblok
+                document.querySelector('#errors').classList.remove('d-none');
+            } else {
+                // Toon succes- en informatiemeldingen
+                document.querySelector('#success').classList.remove('d-none');
+                displayPaymentAlert();
+                document.querySelector('#info').classList.remove('d-none');
+            }
         }
-    }
-
-    // Functie om een leeg veld te controleren en een melding toe te voegen aan de array errors
-    function checkEmptyField(field, message) {
-        if (field.value.trim() === "") {
-            errorsArray.push(message);
+    
+        // Functie om een leeg veld te controleren en een melding toe te voegen aan de array errors
+        function checkEmptyField(field, message) {
+            if (field.value.trim() === "") {
+                errorsArray.push(message);
+            }
         }
-    }
-
-    // Functie om e-mailadres te controleren
-    function validateEmail(emailField) {
-        const email = emailField.value.trim();
-        const emailRegex = /^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*(\.[a-zA-Z]{2,})+$/;
-
-        if (!emailRegex.test(email)) {
-            errorsArray.push("E-mailadres is niet correct.");
+    
+        // Functie om e-mailadres te controleren
+        function validateEmail(emailField) {
+            const email = emailField.value.trim();
+            const emailRegex = /^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*(\.[a-zA-Z]{2,})+$/;
+    
+            if (!emailRegex.test(email)) {
+                errorsArray.push("E-mailadres is niet correct.");
+            }
         }
-    }
-
-    // Functie om wachtwoorden te controleren
-    function checkPasswords() {
-        const passwordField = document.getElementById('wachtwoord');
-        const confirmPasswordField = document.getElementById('herhaalWachtwoord');
-
-        // Controleer of beide wachtwoorden zijn ingevuld
-        checkEmptyField(passwordField, 'Wachtwoord is verplicht');
-        checkEmptyField(confirmPasswordField, 'Herhaal wachtwoord is verplicht');
-
-        // Controleer of wachtwoorden gelijk zijn en voldoen aan lengte-eis
-        const password = passwordField.value.trim();
-        const confirmPassword = confirmPasswordField.value.trim();
-
-        if (password.length < 8) {
-            errorsArray.push('Wachtwoord moet minstens 8 karakters lang zijn.');
+    
+        // Functie om wachtwoorden te controleren
+        function checkPasswords() {
+            const passwordField = document.getElementById('wachtwoord');
+            const confirmPasswordField = document.getElementById('herhaalWachtwoord');
+    
+            // Controleer of beide wachtwoorden zijn ingevuld
+            checkEmptyField(passwordField, 'Wachtwoord is verplicht');
+            checkEmptyField(confirmPasswordField, 'Herhaal wachtwoord is verplicht');
+    
+            // Controleer of wachtwoorden gelijk zijn en voldoen aan lengte-eis
+            const password = passwordField.value.trim();
+            const confirmPassword = confirmPasswordField.value.trim();
+    
+            if (password.length < 8) {
+                errorsArray.push('Wachtwoord moet minstens 8 karakters lang zijn.');
+            }
+    
+            if (password !== confirmPassword) {
+                errorsArray.push('Wachtwoorden komen niet overeen.');
+            }
         }
-
-        if (password !== confirmPassword) {
-            errorsArray.push('Wachtwoorden komen niet overeen.');
+    
+        // Functie om de betalingswijze te controleren
+        function validatePayment(paymentMethod) {
+            if (!paymentMethod) {
+                errorsArray.push('Selecteer een betalingswijze.');
+            } else {
+                // Toon de geselecteerde betalingswijze in de blauwe alert
+                document.querySelector('#info p').innerHTML = `Betalingswijze: ${paymentMethod.value}`;
+            }
         }
-    }
+    
+        // Functie om de postcode te controleren
+        function checkPC(postcodeField) {
+            const postcode = postcodeField.value.trim();
+    
+            if (postcode === "") {
+                errorsArray.push('Het veld postcode is vereist.');
+            } else {
+                const postcodeValue = parseInt(postcode, 10);
+    
+                if (isNaN(postcodeValue) || postcodeValue < 1000 || postcodeValue >= 10000) {
+                    errorsArray.push('De waarde van postcode moet tussen 1000 en 9999 liggen.');
+                }
+            }
+        }
+    
+        // Functie om de betalingswijze samen met de groene alert weer te geven
+        function displayPaymentAlert() {
+            const paymentMethodAlert = document.querySelector('#info');
+            if (paymentMethodAlert.classList.contains('d-none')) {
+                // Toon betalingswijze alleen als de groene alert zichtbaar is
+                paymentMethodAlert.classList.remove('d-none');
+            }
+        }
     
         // Functie om alle meldingen te verbergen
         function hideAlerts() {
